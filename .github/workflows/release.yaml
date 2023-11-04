@@ -4,7 +4,6 @@ on: push
 
 jobs:
   build-and-push-docker-image:
-    needs: [test-build]
     runs-on: ubuntu-latest
     permissions:
       contents: read
