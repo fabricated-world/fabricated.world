@@ -1,0 +1,188 @@
+<html>
+    <head>
+        <meta name="darkreader-lock">
+        <style>
+            body {
+                background-color: black;
+            }
+        </style>
+    </head>
+    <body>
+        <style>       
+            .text-box {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+        
+            .text {
+                color: white;
+                font-family: 'JetBrains Mono', monospace;
+            }
+        
+            .title {
+                font-size: 100px;
+            }
+            
+            .subtitle {
+                margin-top: 15px;
+                font-size: 50px;
+            }
+        
+            .blur {
+                text-shadow: #0ff 0 0 50px;
+            }
+        
+            .luminaire {
+                position: absolute;
+            }
+        
+            .blue {
+                animation: blue-blink 2s linear infinite;
+            }
+        
+            .purple {
+                animation: purple-blink 2s linear infinite;
+            }
+        
+        
+            @keyframes blue-blink {
+                0% {
+                    box-shadow: 0 0 100px 35px #055;
+                }
+                50% {
+                    box-shadow: 0 0 100px 35px #0ff;
+                }
+                100% {
+                    box-shadow: 0 0 100px 35px #055;
+                }
+            }
+        
+            @keyframes purple-blink {
+                0% {
+                    box-shadow: 0 0 100px 35px #306;
+                }
+                50% {
+                    box-shadow: 0 0 100px 35px #60f;
+                }
+                100% {
+                    box-shadow: 0 0 100px 35px #408;
+                }
+            }
+        
+        </style>
+
+        <!--Actual content-->
+        <div class="text-box">
+            <a class="text title blur">fabricated.world</a>
+            <a class="text subtitle">-coming soon-</a>
+        </div>
+
+        <script>
+            function DegToRad( deg) {
+                return (deg * Math.PI) / 180.0;
+            }
+        
+            function getRandomInt(max) {
+                return Math.round(Math.random() * (max + 1));
+            }
+        
+            function movement(position, speed, direction) {
+                const x = Math.round(position.x + speed * Math.cos(DegToRad(direction)));
+                const y = Math.round(position.y + speed * Math.sin(DegToRad(direction)));
+                return {x, y, direction};
+            }
+        
+            function outOfBoundHandler(position, threshold) {
+                let outOfBound = false;
+        
+                // check that the dot is not out of boundaries
+                if (position.x < -threshold || position.x > (screen.width + threshold) || position.y < -threshold || position.y > (screen.height + threshold)) {
+                    outOfBound = true
+                }
+                
+                if (outOfBound) {
+                    // choose a side to teleport to and
+                    // change the coordinated and direction to match the choosen side
+                    switch (getRandomInt(3)) {
+                        case 0 :
+                            // Top
+                            position.y = -threshold;
+                            position.x = 0.25*screen.width + getRandomInt(0.5*screen.width);
+                            position.direction = 45 + getRandomInt(90);
+                            break;
+                        
+                        case 1 : 
+                            // Bottom
+                            position.y = screen.height + threshold;
+                            position.x = 0.25*screen.width + getRandomInt(0.5*screen.width);
+                            position.direction = 225 + getRandomInt(90);
+                            break;
+                        
+                        case 2 : 
+                            // Left
+                            position.x = -threshold;
+                            position.y = 0.25*screen.height + getRandomInt(0.5*screen.height);
+                            position.direction = 315 + getRandomInt(90);
+                            break;
+                        
+                        case 3 : 
+                            // Right
+                            position.x = screen.width + threshold;
+                            position.y = 0.25*screen.height + getRandomInt(0.5*screen.height);
+                            position.direction = 135 + getRandomInt(90);
+                            break;
+                    }
+        
+                    // normalize the direction value so that it stays between 0 and 360
+                    if (position.direction > 360) {
+                        position.direction -= 360;
+                    } else if (position.direction < 0) {
+                        position.direction += 360;
+                    }
+                }
+            }
+        
+            function computeDot(dot) {
+                // compute new coordinates
+                let position = movement({x: parseInt(dot.style.left), y: parseInt(dot.style.top)}, dot.velocity, dot.direction)
+        
+                outOfBoundHandler(position, 150);
+        
+                // apply the new coordinates 
+                dot.style.left = position.x
+                dot.style.top = position.y
+                dot.direction = position.direction
+            }
+        
+            // create and init dots from a color
+            let dots = Array(5).fill("purple").concat(Array(5).fill("blue"))
+            for (let i = 0; i < dots.length; i++) {
+                // make a el with the luminaire class and the color of the blink
+                cls = ["luminaire", dots[i]]
+                dots[i] = document.createElement("div");
+                dots[i].classList.add(...cls);
+                document.body.appendChild(dots[i]);
+        
+                // set random coordinates, direction and velocity
+                dots[i].style.left = getRandomInt(screen.width);
+                dots[i].style.top  = getRandomInt(screen.height);
+                dots[i].direction  = getRandomInt(360);
+                dots[i].velocity   = getRandomInt(1)+1;
+            }
+        
+            setInterval(_ => {
+                // compute the new coordinates of every dots
+                for (let i = 0; i < dots.length; i++) {
+                    computeDot(dots[i]);
+                }
+            }, 1)
+        
+        </script>        
+    </body>
+</html>
