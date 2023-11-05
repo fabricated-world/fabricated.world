@@ -40,7 +40,7 @@
             }
         
             .blur {
-                text-shadow: #0ff 0 0 50px;
+                text-shadow: #0bb 0 0 50px;
             }
         
             .luminaire {
@@ -107,7 +107,7 @@
                 let outOfBound = false;
         
                 // check that the dot is not out of boundaries
-                if (position.x < -threshold || position.x > (screen.width + threshold) || position.y < -threshold || position.y > (screen.height + threshold)) {
+                if (position.x < -threshold || position.x > (window.innerWidth + threshold) || position.y < -threshold || position.y > (window.innerHeight + threshold)) {
                     outOfBound = true
                 }
                 
@@ -118,28 +118,28 @@
                         case 0 :
                             // Top
                             position.y = -threshold;
-                            position.x = 0.25*screen.width + getRandomInt(0.5*screen.width);
+                            position.x = 0.25*window.innerWidth + getRandomInt(0.5*window.innerWidth);
                             position.direction = 45 + getRandomInt(90);
                             break;
                         
                         case 1 : 
                             // Bottom
-                            position.y = screen.height + threshold;
-                            position.x = 0.25*screen.width + getRandomInt(0.5*screen.width);
+                            position.y = window.innerHeight + threshold;
+                            position.x = 0.25*window.innerWidth + getRandomInt(0.5*window.innerWidth);
                             position.direction = 225 + getRandomInt(90);
                             break;
                         
                         case 2 : 
                             // Left
                             position.x = -threshold;
-                            position.y = 0.25*screen.height + getRandomInt(0.5*screen.height);
+                            position.y = 0.25*window.innerHeight + getRandomInt(0.5*window.innerHeight);
                             position.direction = 315 + getRandomInt(90);
                             break;
                         
                         case 3 : 
                             // Right
-                            position.x = screen.width + threshold;
-                            position.y = 0.25*screen.height + getRandomInt(0.5*screen.height);
+                            position.x = window.innerWidth + threshold;
+                            position.y = 0.25*window.innerHeight + getRandomInt(0.5*window.innerHeight);
                             position.direction = 135 + getRandomInt(90);
                             break;
                     }
@@ -175,8 +175,8 @@
                 document.body.appendChild(dots[i]);
         
                 // set random coordinates, direction and velocity
-                dots[i].style.left = getRandomInt(screen.width);
-                dots[i].style.top  = getRandomInt(screen.height);
+                dots[i].style.left = getRandomInt(window.innerWidth);
+                dots[i].style.top  = getRandomInt(window.innerHeight);
                 dots[i].direction  = getRandomInt(360);
                 dots[i].velocity   = getRandomInt(1)+1;
             }
